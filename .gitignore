@@ -5,4 +5,5 @@ __pycache__/
 *.db
 .vscode/
 *.pem
+!azure-mysql-ca-bundle.pem
 TLS_SSL証明書/

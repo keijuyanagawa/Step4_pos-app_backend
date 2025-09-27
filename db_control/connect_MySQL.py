@@ -28,8 +28,15 @@ if not DATABASE_URL:
     raise ValueError("FATAL ERROR: DATABASE_URL environment variable is not set. Please check your .env file or Azure Application Settings.")
 
 
-# 確認用に追加
+# SSL証明書のパス設定
 SSL_CA_PATH = os.getenv('SSL_CA_PATH')
+
+# Azure App Serviceでは相対パスを使用
+if not SSL_CA_PATH:
+    # デフォルトでプロジェクト内の証明書を使用
+    current_dir = os.path.dirname(os.path.dirname(__file__))  # backend フォルダ
+    SSL_CA_PATH = os.path.join(current_dir, 'azure-mysql-ca-bundle.pem')
+
 print("SSL_CAパス:", SSL_CA_PATH)
 print("ファイル存在:", os.path.exists(SSL_CA_PATH))
 
