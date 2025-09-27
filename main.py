@@ -32,7 +32,7 @@ def read_root():
 def get_pos_data():
 	return {"items": ["Apple", "Banana", "Cherry"], "total": 1500}
 
-# Azureでの起動設定
+# Azureでの起動設定（デバッグ用）
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
