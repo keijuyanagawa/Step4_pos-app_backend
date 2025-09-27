@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine
-
 import os
 from dotenv import load_dotenv
 
@@ -15,14 +14,19 @@ load_dotenv(dotenv_path=env_path) #追加
 
 
 # データベース接続情報
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
-DB_NAME = os.getenv('DB_NAME')
+# DB_USER = os.getenv('DB_USER')
+# DB_PASSWORD = os.getenv('DB_PASSWORD')
+# DB_HOST = os.getenv('DB_HOST')
+# DB_PORT = os.getenv('DB_PORT')
+# DB_NAME = os.getenv('DB_NAME')
 
 # MySQLのURL構築
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if not DATABASE_URL:
+    raise ValueError("FATAL ERROR: DATABASE_URL environment variable is not set. Please check your .env file or Azure Application Settings.")
+
 
 # 確認用に追加
 SSL_CA_PATH = os.getenv('SSL_CA_PATH')
