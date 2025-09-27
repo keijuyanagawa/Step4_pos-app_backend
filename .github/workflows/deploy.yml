@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  AZURE_WEBAPP_NAME: 'yapp-002-gen10-step3-1-py-oshima36' # ご自身のFastAPI用App Service名
+  AZURE_WEBAPP_NAME: 'app-002-gen10-step3-1-py-oshima36' # ご自身のFastAPI用App Service名
   PYTHON_VERSION: '3.11'
 
 jobs:
