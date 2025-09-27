@@ -1,0 +1,7 @@
+﻿fastapi
+uvicorn[standard]
+gunicorn
+python-dotenv
+SQLAlchemy
+PyMySQL
+pandas
