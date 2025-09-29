@@ -37,6 +37,10 @@ if not SSL_CA_PATH:
     current_dir = os.path.dirname(os.path.dirname(__file__))  # backend フォルダ
     SSL_CA_PATH = os.path.join(current_dir, 'azure-mysql-ca-bundle.pem')
 
+print("DEBUG - __file__:", __file__)
+print("DEBUG - current_dir:", current_dir)
+print("DEBUG - SSL_CA_PATH (相対):", SSL_CA_PATH)
+print("DEBUG - SSL_CA_PATH (絶対):", os.path.abspath(SSL_CA_PATH))
 print("SSL_CAパス:", SSL_CA_PATH)
 print("ファイル存在:", os.path.exists(SSL_CA_PATH))
 

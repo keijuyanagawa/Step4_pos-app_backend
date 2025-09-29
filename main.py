@@ -72,6 +72,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Azure環境でのDB初期化
+@app.on_event("startup")
+async def startup_event():
+    """アプリケーション起動時の処理"""
+    # Azure環境の場合のみDB初期化
+    if os.getenv("AZURE_FUNCTIONS_ENVIRONMENT") or os.getenv("WEBSITE_SITE_NAME"):
+        print("Azure環境検出: データベース初期化を実行...")
+        try:
+            from db_control.create_tables_MySQL import init_db
+            init_db()
+            print("データベース初期化完了!")
+        except Exception as e:
+            print(f"データベース初期化エラー: {e}")
+            # エラーでもアプリケーションは起動を続行
+
 # 環境に応じたCORS設定
 allowed_origins = []
 
@@ -265,6 +280,47 @@ def health_check():
     ヘルスチェック
     """
     return {"status": "healthy", "timestamp": datetime.now()}
+
+@app.get("/api/debug/cashiers")
+def debug_cashiers(db = Depends(get_db)):
+    """
+    デバッグ用: レジ担当者一覧
+    """
+    try:
+        cashiers = db.query(CashierMaster).all()
+        return {
+            "count": len(cashiers),
+            "cashiers": [
+                {
+                    "cashier_code": c.cashier_code,
+                    "cashier_name": c.cashier_name,
+                    "is_active": c.is_active
+                } for c in cashiers
+            ]
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/debug/products")
+def debug_products(db = Depends(get_db)):
+    """
+    デバッグ用: 商品マスタ一覧
+    """
+    try:
+        products = db.query(ProductMaster).limit(10).all()
+        return {
+            "count": len(products),
+            "products": [
+                {
+                    "barcode": p.barcode,
+                    "product_name": p.product_name,
+                    "unit_price": p.unit_price,
+                    "tax_code": p.tax_code
+                } for p in products
+            ]
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 # Azureでの起動設定（デバッグ用）
 if __name__ == "__main__":
