@@ -72,21 +72,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Azure環境でのDB初期化
-@app.on_event("startup")
-async def startup_event():
-    """アプリケーション起動時の処理"""
-    # Azure環境の場合のみDB初期化
-    if os.getenv("AZURE_FUNCTIONS_ENVIRONMENT") or os.getenv("WEBSITE_SITE_NAME"):
-        print("Azure環境検出: データベース初期化を実行...")
-        try:
-            from db_control.create_tables_MySQL import init_db
-            init_db()
-            print("データベース初期化完了!")
-        except Exception as e:
-            print(f"データベース初期化エラー: {e}")
-            # エラーでもアプリケーションは起動を続行
-
 # 環境に応じたCORS設定
 allowed_origins = []
 
@@ -94,10 +79,17 @@ allowed_origins = []
 if os.getenv("AZURE_FUNCTIONS_ENVIRONMENT") or os.getenv("WEBSITE_SITE_NAME"):
     # AzureのフロントエンドURL（NEXTJS_URLまたはFRONTEND_URLを使用）
     frontend_url = os.getenv("NEXTJS_URL") or os.getenv("FRONTEND_URL", "https://app-002-gen10-step3-1-node-oshima36.azurewebsites.net")
-    allowed_origins = [frontend_url]
+    # デバッグ用に複数のURLを許可
+    allowed_origins = [
+        frontend_url,
+        "https://app-002-gen10-step3-1-node-oshima36.azurewebsites.net",
+        "https://app-002-gen10-step3-1-node-oshima36.azurewebsites.net/"
+    ]
 else:
     # ローカル開発環境
     allowed_origins = ["http://localhost:3000"]
+
+print(f"CORS allowed_origins: {allowed_origins}")  # デバッグ用
 
 app.add_middleware(
 	CORSMiddleware,
