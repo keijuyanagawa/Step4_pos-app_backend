@@ -167,6 +167,7 @@ def login(request: LoginRequest, db = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"認証エラー: {str(e)}")
 
+
 @app.get("/api/products/{barcode}", response_model=ProductResponse)
 def get_product_by_barcode(barcode: str, db = Depends(get_db)):
     """
