@@ -11,7 +11,10 @@ import pandas as pd
 #　from db_control.connect import engine
 from db_control.connect_MySQL import engine #Azure用に変更
 # from db_control.mymodels import Customers
-from db_control.mymodels_MySQL import Customers #Azure用に変更
+from db_control.mymodels_MySQL import (
+    CashierMaster, TaxMaster, ProductMaster, 
+    TransactionData, TransactionDetail
+) #POSシステム用に変更
 
 
 def myinsert(mymodel, values):
