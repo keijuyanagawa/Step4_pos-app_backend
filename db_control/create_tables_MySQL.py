@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 from sqlalchemy import inspect, text
 from sqlalchemy.orm import sessionmaker
-from mymodels_MySQL import (
+from db_control.mymodels_MySQL import (
     Base, CashierMaster, TaxMaster, ProductMaster, 
     TransactionData, TransactionDetail
 )
-from connect_MySQL import engine
+from db_control.connect_MySQL import engine
 from datetime import datetime
 import hashlib
 
@@ -29,7 +29,7 @@ def init_db():
     
     if not is_azure and existing_tables:
         # ローカル環境の場合、既存テーブルを削除
-        print("ローカル環境: 既存テーブルを削除します...")
+        print("🔄 ローカル環境: 既存テーブルを削除します...")
         try:
             # 外部キー制約を無効化してテーブル削除
             with engine.connect() as conn:
@@ -38,16 +38,16 @@ def init_db():
                     conn.execute(text(f"DROP TABLE IF EXISTS `{table}`"))
                 conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
                 conn.commit()
-            print("既存テーブル削除完了")
+            print("✅ 既存テーブル削除完了")
         except Exception as e:
-            print(f"テーブル削除エラー: {e}")
+            print(f"❌ テーブル削除エラー: {e}")
             raise
     
     # テーブル作成
-    print("POSシステム用テーブルを作成中...")
+    print("📝 POSシステム用テーブルを作成中...")
     try:
         Base.metadata.create_all(bind=engine)
-        print("テーブル作成完了!")
+        print("✅ テーブル作成完了!")
         
         # 作成されたテーブル一覧を表示
         inspector = inspect(engine)
@@ -55,13 +55,13 @@ def init_db():
         print(f"作成されたテーブル: {new_tables}")
         
     except Exception as e:
-        print(f"テーブル作成エラー: {e}")
+        print(f"❌ テーブル作成エラー: {e}")
         raise
     
     # 初期データ投入
-    print("初期データを投入中...")
+    print("📊 初期データを投入中...")
     insert_sample_data()
-    print("データベース初期化完了!")
+    print("✅ データベース初期化完了!")
 
 
 def insert_sample_data():
@@ -73,7 +73,7 @@ def insert_sample_data():
     
     try:
         # 1. 税マスタの投入
-        print("税マスタデータ投入...")
+        print("💰 税マスタデータ投入...")
         tax_data = [
             {"tax_code": "T10", "tax_name": "標準税率", "tax_rate": 0.1000},
             {"tax_code": "T08", "tax_name": "軽減税率", "tax_rate": 0.0800},
@@ -86,7 +86,7 @@ def insert_sample_data():
                 session.add(TaxMaster(**tax))
         
         # 2. レジ担当者マスタの投入
-        print("レジ担当者マスタデータ投入...")
+        print("👤 レジ担当者マスタデータ投入...")
         # パスワード「password123」のハッシュ化
         password_hash = hashlib.sha256("password123".encode()).hexdigest()
         
@@ -102,7 +102,7 @@ def insert_sample_data():
                 session.add(CashierMaster(**cashier))
         
         # 3. 商品マスタの投入
-        print("商品マスタデータ投入...")
+        print("🛍️ 商品マスタデータ投入...")
         product_data = [
             {"barcode": "4901234567890", "product_name": "お茶 500ml", "unit_price": 120, "tax_code": "T08"},
             {"barcode": "4901234567891", "product_name": "コーヒー 250ml", "unit_price": 150, "tax_code": "T08"},
@@ -121,21 +121,21 @@ def insert_sample_data():
         
         # コミット
         session.commit()
-        print("初期データ投入完了!")
+        print("✅ 初期データ投入完了!")
         
         # データ件数確認
         tax_count = session.query(TaxMaster).count()
         cashier_count = session.query(CashierMaster).count()
         product_count = session.query(ProductMaster).count()
         
-        print("投入データ確認:")
+        print(f"📊 投入データ確認:")
         print(f"   - 税マスタ: {tax_count}件")
         print(f"   - レジ担当者: {cashier_count}件")
         print(f"   - 商品マスタ: {product_count}件")
         
     except Exception as e:
         session.rollback()
-        print(f"初期データ投入エラー: {e}")
+        print(f"❌ 初期データ投入エラー: {e}")
         raise
     finally:
         session.close()
@@ -143,6 +143,6 @@ def insert_sample_data():
 
 # スクリプトとして直接実行された場合のテスト
 if __name__ == "__main__":
-    print("データベース初期化スクリプト実行中...")
+    print("🚀 データベース初期化スクリプト実行中...")
     init_db()
-    print("完了!")
+    print("🎉 完了!")
