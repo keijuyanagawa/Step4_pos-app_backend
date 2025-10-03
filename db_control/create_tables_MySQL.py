@@ -104,7 +104,7 @@ def insert_sample_data():
         # 3. 商品マスタの投入
         print("🛍️ 商品マスタデータ投入...")
         product_data = [
-            {"barcode": "4901234567890", "product_name": "お茶 500ml", "unit_price": 120, "tax_code": "T08"},
+            {"barcode": "4901234567290", "product_name": "お茶 500ml", "unit_price": 120, "tax_code": "T08"},
             {"barcode": "4901234567891", "product_name": "コーヒー 250ml", "unit_price": 150, "tax_code": "T08"},
             {"barcode": "4901234567892", "product_name": "ボールペン 青", "unit_price": 100, "tax_code": "T10"},
             {"barcode": "4901234567893", "product_name": "ノート A4", "unit_price": 200, "tax_code": "T10"},
