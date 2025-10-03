@@ -86,8 +86,11 @@ if os.getenv("AZURE_FUNCTIONS_ENVIRONMENT") or os.getenv("WEBSITE_SITE_NAME"):
         "https://app-002-gen10-step3-1-node-oshima36.azurewebsites.net/"
     ]
 else:
-    # ローカル開発環境
-    allowed_origins = ["http://localhost:3000"]
+    # ローカル開発環境（HTTPとHTTPS両方を許可）
+    allowed_origins = [
+        "http://localhost:3000",
+        "https://localhost:3000"
+    ]
 
 print(f"CORS allowed_origins: {allowed_origins}")  # デバッグ用
 
@@ -174,6 +177,13 @@ def get_product_by_barcode(barcode: str, db = Depends(get_db)):
     バーコードによる商品検索
     """
     try:
+        print("=== Product Search API Called ===")
+        print(f"Requested barcode: '{barcode}'")
+        print(f"Barcode length: {len(barcode)}")
+        print(f"Barcode type: {type(barcode)}")
+        print(f"Barcode repr: {repr(barcode)}")
+        print(f"Barcode bytes: {barcode.encode('utf-8')}")
+        
         # 商品マスタから検索（税マスタとJOIN）
         result = db.query(ProductMaster, TaxMaster).join(
             TaxMaster, ProductMaster.tax_code == TaxMaster.tax_code
@@ -184,9 +194,15 @@ def get_product_by_barcode(barcode: str, db = Depends(get_db)):
         ).first()
         
         if not result:
+            # デバッグ用：登録されている全バーコードを確認
+            all_barcodes = db.query(ProductMaster.barcode).filter(ProductMaster.is_active == 1).all()
+            print(f"Available barcodes in DB: {[b[0] for b in all_barcodes]}")
+            print("=================================")
             raise HTTPException(status_code=404, detail="商品がマスタ未登録です")
         
         product, tax = result
+        print(f"Product found: {product.product_name}")
+        print("=================================")
         
         # 税込価格計算
         tax_amount = calculate_tax_amount(product.unit_price, tax.tax_rate)
@@ -204,6 +220,8 @@ def get_product_by_barcode(barcode: str, db = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
+        print(f"Exception occurred: {str(e)}")
+        print("=================================")
         raise HTTPException(status_code=500, detail=f"商品検索エラー: {str(e)}")
 
 @app.post("/api/purchase", response_model=PurchaseResponse)
