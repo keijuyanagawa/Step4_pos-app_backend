@@ -104,14 +104,14 @@ def insert_sample_data():
         # 3. 商品マスタの投入
         print("🛍️ 商品マスタデータ投入...")
         product_data = [
-            {"barcode": "4901234567890", "product_name": "えんぴつ HB", "unit_price": 120, "tax_code": "T10"},
-            {"barcode": "4901234567891", "product_name": "万年筆", "unit_price": 15000, "tax_code": "T10"},
-            {"barcode": "4901234567892", "product_name": "ボールペン 青", "unit_price": 100, "tax_code": "T10"},
-            {"barcode": "4901234567893", "product_name": "ノート A4", "unit_price": 200, "tax_code": "T10"},
             {"barcode": "4901234567894", "product_name": "したじき", "unit_price": 180, "tax_code": "T10"},
-            {"barcode": "4901234567895", "product_name": "消しゴム", "unit_price": 80, "tax_code": "T10"},
-            {"barcode": "4901234567896", "product_name": "インク", "unit_price": 1000, "tax_code": "T10"},
-            {"barcode": "4901234567897", "product_name": "定規 30cm", "unit_price": 300, "tax_code": "T10"}
+            {"barcode": "4902102141147", "product_name": "消しゴム", "unit_price": 80, "tax_code": "T10"},
+            {"barcode": "4901111222223", "product_name": "えんぴつ HB", "unit_price": 120, "tax_code": "T10"},
+            {"barcode": "4902222333336", "product_name": "万年筆", "unit_price": 15000, "tax_code": "T10"},
+            {"barcode": "4901827364514", "product_name": "ボールペン 青", "unit_price": 100, "tax_code": "T10"},
+            {"barcode": "4901111222227", "product_name": "ノート A4", "unit_price": 200, "tax_code": "T10"},
+            {"barcode": "4909876543212", "product_name": "インク", "unit_price": 1000, "tax_code": "T10"},
+            {"barcode": "4901010202027", "product_name": "定規 30cm", "unit_price": 300, "tax_code": "T10"}
         ]
         
         for product in product_data:
